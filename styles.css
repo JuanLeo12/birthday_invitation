@@ -375,8 +375,10 @@ body {
 .countdown-message {
     font-family: 'Dancing Script', cursive;
     font-size: clamp(1.5rem, 3vw, 2rem);
-    color: var(--primary-purple);
+    color: #6b4896;
     margin-top: 30px;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* ===== Parents Section ===== */
