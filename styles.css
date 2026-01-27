@@ -252,11 +252,9 @@ body {
 /* ===== Countdown Section ===== */
 .countdown-section {
     padding: 80px 20px 0px;
-    background: linear-gradient(180deg, #e8d5f0 0%, #f5b8d9 100%);
+    background: #f5b8d9;
     text-align: center;
     position: relative;
-    z-index: 2;
-    overflow: hidden;
 }
 
 .countdown-section::before,
@@ -384,10 +382,9 @@ body {
 /* ===== Parents Section ===== */
 .parents-section {
     padding: 80px 20px;
-    background: linear-gradient(180deg, #f5b8d9 0%, #e8d5f0 30%, #dcc8e8 100%);
+    background: linear-gradient(180deg, #f5b8d9 0%, #e8d5f0 50%, #dcc8e8 100%);
     text-align: center;
     position: relative;
-    overflow: hidden;
     margin-top: 0;
 }
 
