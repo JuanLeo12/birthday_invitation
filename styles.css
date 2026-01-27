@@ -41,13 +41,14 @@ body {
 /* ===== Hero Section ===== */
 .hero {
     position: relative;
-    min-height: 100vh;
+    height: 100vh;
+    max-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(180deg, var(--primary-purple) 0%, #c88db8 70%, #f5b8d9 100%);
     overflow: hidden;
-    z-index: 1;
+}
 }
 
 .hero::before {
@@ -255,6 +256,7 @@ body {
     background: #f5b8d9;
     text-align: center;
     position: relative;
+    z-index: 10;
 }
 
 .countdown-section::before,
