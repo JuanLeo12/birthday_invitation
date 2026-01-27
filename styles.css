@@ -390,55 +390,32 @@ body {
     overflow: hidden;
 }
 
-.parents-section::before,
-.parents-section::after {
-    content: '';
-    position: absolute;
-    width: 250px;
-    height: 250px;
-    background-image: url('https://cdn-icons-png.freepik.com/256/14259/14259816.png?semt=ais_white_label');
-    background-size: contain;
-    background-repeat: no-repeat;
-    opacity: 0.3;
-    z-index: 1;
-}
+/* Decoraciones de padres solo en desktop */
+@media (min-width: 1024px) {
+    .parents-section::before,
+    .parents-section::after {
+        content: '';
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background-image: url('https://cdn-icons-png.freepik.com/256/14259/14259816.png?semt=ais_white_label');
+        background-size: contain;
+        background-repeat: no-repeat;
+        opacity: 0.25;
+        z-index: 1;
+    }
 
-.parents-section::before {
-    top: 50%;
-    left: -70px;
-    transform: translateY(-50%) rotate(-20deg);
-}
+    .parents-section::before {
+        top: 50%;
+        left: -60px;
+        transform: translateY(-50%) rotate(-20deg);
+    }
 
-.parents-section::after {
-    top: 50%;
-    right: -70px;
-    transform: translateY(-50%) rotate(20deg) scaleX(-1);
-}
-
-/* Más decoraciones para padres */
-.parents-section .container::before,
-.parents-section .container::after {
-    content: '';
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    background-image: url('https://cdn-icons-png.freepik.com/256/14259/14259816.png?semt=ais_white_label');
-    background-size: contain;
-    background-repeat: no-repeat;
-    opacity: 0.2;
-    z-index: 1;
-}
-
-.parents-section .container::before {
-    top: 10%;
-    left: -40px;
-    transform: rotate(-25deg);
-}
-
-.parents-section .container::after {
-    bottom: 10%;
-    right: -40px;
-    transform: rotate(25deg) scaleX(-1);
+    .parents-section::after {
+        top: 50%;
+        right: -60px;
+        transform: translateY(-50%) rotate(20deg) scaleX(-1);
+    }
 }
 
 .parents-content {
@@ -1289,16 +1266,6 @@ body {
         left: -20px;
     }
     
-    .parents-section::before,
-    .parents-section::after {
-        display: none;
-    }
-    
-    .parents-section .container::before,
-    .parents-section .container::after {
-        display: none;
-    }
-    
     .photo-gallery .container::before,
     .photo-gallery .container::after {
         width: 95px;
@@ -1331,13 +1298,6 @@ body {
 }
 
 @media (max-width: 480px) {
-    .parents-section::before,
-    .parents-section::after,
-    .parents-section .container::before,
-    .parents-section .container::after {
-        display: none;
-    }
-    
     .hero-content {
         padding: 15px 10px 50px;
     }
