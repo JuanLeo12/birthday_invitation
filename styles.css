@@ -45,7 +45,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-pink) 100%);
+    background: linear-gradient(180deg, var(--primary-purple) 0%, #c88db8 70%, #f5b8d9 100%);
     overflow: hidden;
     z-index: 1;
 }
@@ -252,7 +252,7 @@ body {
 /* ===== Countdown Section ===== */
 .countdown-section {
     padding: 80px 20px 0px;
-    background: #f5b8d9;
+    background: linear-gradient(180deg, #f5b8d9 0%, #f5b8d9 100%);
     text-align: center;
     position: relative;
 }
