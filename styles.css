@@ -52,7 +52,7 @@ body {
     background: linear-gradient(180deg, var(--primary-purple) 0%, #c88db8 70%, #f5b8d9 100%);
     overflow: hidden;
 }
-}
+
 
 .hero::before {
     content: '';
@@ -1473,5 +1473,236 @@ body {
             opacity: 1;
             transform: translateY(0);
         }
+    }
+}
+
+/* ===== Gift Registry Section ===== */
+.gift-registry {
+    padding: 80px 20px;
+    background: linear-gradient(180deg, #dcc8e8 0%, #e8d5f0 50%, #f5b8d9 100%);
+    text-align: center;
+    position: relative;
+}
+
+.registry-description {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    color: var(--text-dark);
+    margin-bottom: 50px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.registry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.registry-card {
+    background: linear-gradient(135deg, #fef5fb 0%, #f9e5f5 100%);
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(155, 114, 207, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 3px solid var(--primary-purple);
+    position: relative;
+    z-index: 10;
+}
+
+.registry-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(155, 114, 207, 0.4);
+}
+
+.registry-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-pink));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.registry-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: white;
+}
+
+.registry-icon.yape-icon {
+    background: linear-gradient(135deg, #6c2e9c, #4a1d6e);
+}
+
+.registry-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+    color: var(--primary-purple);
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.account-number {
+    font-family: 'Montserrat', monospace;
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    color: var(--dark-purple);
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    word-break: break-all;
+}
+
+.copy-btn {
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-pink));
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(155, 114, 207, 0.3);
+}
+
+.copy-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(155, 114, 207, 0.4);
+}
+
+.copy-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* ===== Music Toggle Button ===== */
+.music-toggle {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-pink));
+    border: 3px solid white;
+    box-shadow: 0 4px 20px rgba(155, 114, 207, 0.4);
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.music-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(155, 114, 207, 0.5);
+}
+
+.music-toggle svg {
+    width: 24px;
+    height: 24px;
+    fill: white;
+}
+
+.music-toggle.playing {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* ===== Copy Notification ===== */
+.copy-notification {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-pink));
+    color: white;
+    padding: 15px 25px;
+    border-radius: 50px;
+    box-shadow: 0 4px 20px rgba(155, 114, 207, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(100px);
+    transition: all 0.3s ease;
+}
+
+.copy-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.copy-notification svg {
+    width: 20px;
+    height: 20px;
+    stroke: white;
+}
+
+.copy-notification span {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* ===== Responsive for New Sections ===== */
+@media (max-width: 768px) {
+    .registry-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .registry-card {
+        padding: 30px 20px;
+    }
+    
+    .account-number {
+        font-size: 1rem;
+    }
+    
+    .music-toggle {
+        width: 50px;
+        height: 50px;
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .music-toggle svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .copy-notification {
+        bottom: 80px;
+        right: 20px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .registry-description {
+        font-size: 0.95rem;
+    }
+    
+    .copy-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
     }
 }

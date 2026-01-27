@@ -193,10 +193,135 @@ document.addEventListener('DOMContentLoaded', () => {
     initLoadingAnimation();
     initButtonEffects();
     initFloatingAnimations();
+    initMusicPlayer();
     
     // Log de confirmación (solo para desarrollo)
     console.log('✨ Invitación de 15 años cargada correctamente ✨');
 });
+
+// ===== Music Player =====
+function initMusicPlayer() {
+    const audio = document.getElementById('background-music');
+    const toggleBtn = document.getElementById('music-toggle');
+    const playIcon = toggleBtn.querySelector('.play-icon');
+    const pauseIcon = toggleBtn.querySelector('.pause-icon');
+    
+    if (!audio || !toggleBtn) return;
+    
+    let isPlaying = false;
+    let musicStarted = false;
+    
+    // Función para iniciar música
+    function startMusic() {
+        if (musicStarted) return;
+        
+        audio.volume = 0.7;
+        audio.play().then(() => {
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+            toggleBtn.classList.add('playing');
+            isPlaying = true;
+            musicStarted = true;
+        }).catch(err => {
+            console.log('No se pudo reproducir:', err);
+        });
+    }
+    
+    // Intentar autoplay
+    setTimeout(startMusic, 500);
+    
+    // Handler específico para wheel que fuerza reproducción
+    function wheelHandler(e) {
+        if (!musicStarted) {
+            console.log('Wheel detectado, iniciando música');
+            startMusic();
+        }
+    }
+    
+    // Escuchar interacciones
+    document.addEventListener('click', startMusic);
+    document.addEventListener('touchstart', startMusic);
+    window.addEventListener('scroll', startMusic);
+    
+    // Eventos de rueda del mouse - probar todas las variantes
+    document.body.addEventListener('wheel', wheelHandler);
+    document.addEventListener('wheel', wheelHandler);
+    window.addEventListener('wheel', wheelHandler);
+    document.body.addEventListener('mousewheel', wheelHandler);
+    document.addEventListener('mousewheel', wheelHandler);
+    window.addEventListener('mousewheel', wheelHandler);
+    document.addEventListener('DOMMouseScroll', wheelHandler);
+    
+    // Botón manual
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        if (isPlaying) {
+            audio.pause();
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+            toggleBtn.classList.remove('playing');
+            isPlaying = false;
+        } else {
+            audio.volume = 0.7;
+            audio.play().then(() => {
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+                toggleBtn.classList.add('playing');
+                isPlaying = true;
+                musicStarted = true;
+            }).catch(err => {
+                console.error('Error:', err);
+            });
+        }
+    });
+}
+
+// ===== Copy to Clipboard Function =====
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        // Mostrar notificación de copiado
+        showCopyNotification();
+    }).catch(err => {
+        console.error('Error al copiar:', err);
+        // Fallback para navegadores antiguos
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showCopyNotification();
+        } catch (err) {
+            console.error('Fallback: Error al copiar', err);
+        }
+        document.body.removeChild(textArea);
+    });
+}
+
+function showCopyNotification() {
+    // Crear notificación
+    const notification = document.createElement('div');
+    notification.className = 'copy-notification';
+    notification.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 6L9 17l-5-5"></path>
+        </svg>
+        <span>¡Copiado!</span>
+    `;
+    document.body.appendChild(notification);
+    
+    // Animar entrada
+    setTimeout(() => notification.classList.add('show'), 10);
+    
+    // Remover después de 2 segundos
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 2000);
+}
 
 // ===== Prevent Right Click on Images (opcional) =====
 document.addEventListener('contextmenu', (e) => {
