@@ -2730,3 +2730,42 @@ a:focus-visible {
 .countdown-item:hover::after {
     left: 140%;
 }
+
+/* ===== Mobile Hero Vertical Rebalance (Only Mobile) ===== */
+@media (max-width: 768px) {
+    .hero-text {
+        padding-top: 30px;
+        padding-bottom: 52px;
+    }
+
+    .name-container {
+        margin-top: 18px;
+    }
+
+    .hero-carriage {
+        bottom: 42px;
+    }
+
+    .hero-girl {
+        bottom: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-text {
+        padding-top: 24px;
+        padding-bottom: 44px;
+    }
+
+    .name-container {
+        margin-top: 14px;
+    }
+
+    .hero-carriage {
+        bottom: 34px;
+    }
+
+    .hero-girl {
+        bottom: 42px;
+    }
+}
