@@ -7,7 +7,10 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="image" href="images/Logo.png" fetchpriority="high">
+    <link rel="preload" as="image" href="images/carroza.png" fetchpriority="high">
+    <link rel="preload" as="image" href="images/chica%20con%20vestido.png" fetchpriority="high">
 </head>
 <body>
     <!-- Audio Player -->
@@ -30,8 +33,7 @@
             <div class="floral-decoration top-left"></div>
             <div class="floral-decoration top-right"></div>
             <div class="hero-text">
-                <h2 class="subtitle fade-in">Mis</h2>
-                <h1 class="main-title fade-in-delay">15 Años</h1>
+                <img src="images/Logo.png" alt="Mis 15 años" class="hero-logo fade-in" fetchpriority="high" decoding="async">
                 <div class="name-container fade-in-delay-2">
                     <div class="decorative-line"></div>
                     <h3 class="birthday-name">Zoe Luana Alejo Linares</h3>
@@ -41,6 +43,20 @@
                     "Un sueño que se hace realidad, una princesa que crece,<br>
                     un momento mágico para celebrar juntos"
                 </p>
+            </div>
+            <div class="hero-effects" aria-hidden="true">
+                <span class="sparkle sparkle-1"></span>
+                <span class="sparkle sparkle-2"></span>
+                <span class="sparkle sparkle-3"></span>
+                <span class="sparkle sparkle-4"></span>
+                <span class="sparkle sparkle-5"></span>
+                <span class="butterfly butterfly-1">🦋</span>
+                <span class="butterfly butterfly-2">🦋</span>
+                <span class="butterfly butterfly-3">🦋</span>
+                <span class="butterfly butterfly-4">🦋</span>
+                <span class="carriage-glow"></span>
+                <img src="images/carroza.png" alt="" class="hero-carriage" aria-hidden="true" fetchpriority="high" decoding="async">
+                <img src="images/chica con vestido.png" alt="" class="hero-girl" aria-hidden="true" fetchpriority="high" decoding="async">
             </div>
             <div class="floral-decoration bottom-left"></div>
             <div class="floral-decoration bottom-right"></div>
@@ -111,21 +127,30 @@
                 "Gracias por ser mi apoyo incondicional, por creer en mis sueños<br>
                 y por hacer de este día un momento inolvidable. Los amo infinitamente."
             </p>
-        </div>
-    </section>
 
-    <!-- Photo Gallery -->
-    <section class="photo-gallery">
-        <div class="container">
-            <div class="gallery-grid">
-                <div class="photo-card">
-                    <img src="images/foto1.jpg" alt="Zoe Luana" class="photo-img">
-                </div>
-                <div class="photo-card">
-                    <img src="images/foto2.jpg" alt="Zoe Luana" class="photo-img">
-                </div>
-                <div class="photo-card">
-                    <img src="images/foto3.jpg" alt="Zoe Luana" class="photo-img">
+            <div class="godparents-section">
+                <h3 class="subsection-title">Mis Padrinos</h3>
+                <div class="godparents-content">
+                    <div class="parent-card godparent-card">
+                        <div class="parent-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <h4 class="godparent-name">Jenny Linares</h4>
+                        <p class="parent-label">Madrina</p>
+                    </div>
+                    <div class="parent-card godparent-card">
+                        <div class="parent-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <h4 class="godparent-name">Stwar Prado</h4>
+                        <p class="parent-label">Padrino</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -183,7 +208,7 @@
                     </div>
                     <h3>Código de Vestimenta</h3>
                     <p class="detail-info">Formal / Elegante</p>
-                    <p class="detail-note">*Nos reservamos el lila para la cumpleañera</p>
+                    <p class="detail-note">*Nos reservamos el <span class="steel-highlight">azul acero</span> para la cumpleañera</p>
                 </div>
             </div>
         </div>
@@ -194,7 +219,7 @@
         <div class="container">
             <h2 class="section-title">Lista de Regalos</h2>
             <p class="registry-description">
-                Si deseas hacerme un regalo, aquí te dejo algunas opciones:
+                El mejor regalo es que estés presente en este día tan esperado, pero si deseas hacerme un obsequio te dejo estas opciones:
             </p>
             
             <div class="registry-grid">
@@ -278,7 +303,7 @@
 
                 <!-- Embedded Google Form -->
                 <div class="form-container">
-                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeh2VVG_EbLZ_otUDv7stlP55MKGkTDZgv_hghCWJodfnrW-g/viewform?embedded=true" width="640" height="678" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
+                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeh2VVG_EbLZ_otUDv7stlP55MKGkTDZgv_hghCWJodfnrW-g/viewform?embedded=true" width="640" height="678" frameborder="0" marginheight="0" marginwidth="0" loading="lazy" referrerpolicy="no-referrer">Cargando…</iframe>
                 </div>
             </div>
         </div>
