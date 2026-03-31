@@ -271,6 +271,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroPointerParallax();
     initButtonEffects();
     initMusicPlayer();
+    
+    // Magic Effects
+    initFallingMagic();
+    initGoldenDividers();
+    initMusicNotes();
 });
 
 // ===== Copy to Clipboard Function =====
@@ -325,3 +330,163 @@ document.addEventListener('contextmenu', (e) => {
         e.preventDefault();
     }
 });
+
+// ===== 3 MAGICAL EFFECTS ===== //
+
+// 1. Falling Magic (Sparkles & Butterflies)
+function initFallingMagic() {
+    const magicContainer = document.createElement('div');
+    magicContainer.className = 'magic-falling-container';
+    document.body.appendChild(magicContainer);
+
+    const createElement = () => {
+        const el = document.createElement('div');
+        const isButterfly = Math.random() > 0.7; // 30% chance for a butterfly
+        
+        el.className = 'falling-element ' + (isButterfly ? 'falling-butterfly' : 'sparkle');
+        if (isButterfly) {
+            el.textContent = '';
+        }
+        
+        // Randomize starting position and duration
+        const startX = Math.random() * window.innerWidth;
+        const duration = 10 + Math.random() * 15; // 10 to 25 seconds
+        const delay = Math.random() * 5;
+        
+        el.style.left = startX + 'px';
+        el.style.animationDuration = duration + 's';
+        el.style.animationDelay = delay + 's';
+        
+        // Clean up after animation finishes to prevent DOM bloating
+        setTimeout(() => {
+            if (el && el.parentNode) {
+                el.parentNode.removeChild(el);
+            }
+        }, (duration + delay) * 1000);
+
+        magicContainer.appendChild(el);
+    };
+
+    // Create initial batch
+    for (let i = 0; i < 15; i++) {
+        setTimeout(createElement, Math.random() * 3000);
+    }
+
+    // Continuously generate new ones
+    setInterval(createElement, 2000);
+}
+
+// 2. Golden Dividers
+function initGoldenDividers() {
+    // Select the sections where we want a divider before them
+    const sections = document.querySelectorAll('.parents-section, .event-details, .gift-registry, .rsvp-section, .photo-gallery');
+    
+    sections.forEach(section => {
+        const divider = document.createElement('div');
+        divider.className = 'golden-divider';
+        section.parentNode.insertBefore(divider, section);
+    });
+}
+
+// 3. Floating Music Notes
+function initMusicNotes() {
+    const audio = document.getElementById('background-music');
+    if (!audio) return;
+    
+    const notes = ['', '', '', ''];
+    
+    setInterval(() => {
+        // Check if audio is actually playing (not paused, no error)
+        if (!audio.paused && !audio.muted) {
+            const note = document.createElement('div');
+            note.className = 'music-note';
+            note.textContent = notes[Math.floor(Math.random() * notes.length)];
+            
+            // Randomize position slightly near the button
+            const offset = (Math.random() - 0.5) * 40;
+            note.style.right = (30 + offset) + 'px';
+            
+            document.body.appendChild(note);
+            
+            setTimeout(() => {
+                if (note && note.parentNode) note.parentNode.removeChild(note);
+            }, 3000);
+        }
+    }, 1500); // 1.5 seconds between notes when playing
+}
+
+// ===== 3 MAGICAL EFFECTS ===== //
+
+// 1. Falling Magic (Sparkles & Butterflies)
+function initFallingMagic() {
+    const magicContainer = document.createElement('div');
+    magicContainer.className = 'magic-falling-container';
+    document.body.appendChild(magicContainer);
+
+    const createElement = () => {
+        const el = document.createElement('div');
+        const isButterfly = Math.random() > 0.85; // 15% chance for a butterfly
+        
+        el.className = 'falling-element ' + (isButterfly ? 'falling-butterfly' : 'sparkle');
+        if (isButterfly) {
+            el.textContent = '';
+        }
+        
+        const startX = Math.random() * window.innerWidth;
+        const duration = 12 + Math.random() * 10;
+        const delay = Math.random() * 3;
+        
+        el.style.left = startX + 'px';
+        el.style.animationDuration = duration + 's';
+        el.style.animationDelay = delay + 's';
+        
+        setTimeout(() => {
+            if (el && el.parentNode) {
+                el.parentNode.removeChild(el);
+            }
+        }, (duration + delay) * 1000);
+
+        magicContainer.appendChild(el);
+    };
+
+    for (let i = 0; i < 15; i++) {
+        setTimeout(createElement, Math.random() * 3000);
+    }
+    setInterval(createElement, 2000);
+}
+
+// 2. Golden Dividers
+function initGoldenDividers() {
+    const sections = document.querySelectorAll('.parents-section, .event-details, .gift-registry, .rsvp-section, .photo-gallery');
+    
+    sections.forEach(section => {
+        const divider = document.createElement('div');
+        divider.className = 'golden-divider';
+        section.parentNode.insertBefore(divider, section);
+    });
+}
+
+// 3. Floating Music Notes
+function initMusicNotes() {
+    const audio = document.getElementById('background-music');
+    if (!audio) return;
+    
+    const notes = ['', '', '', ''];
+    
+    setInterval(() => {
+        if (!audio.paused && !audio.muted) {
+            const note = document.createElement('div');
+            note.className = 'music-note';
+            note.textContent = notes[Math.floor(Math.random() * notes.length)];
+            
+            const offset = (Math.random() - 0.5) * 40;
+            note.style.right = (30 + offset) + 'px';
+            
+            document.body.appendChild(note);
+            
+            setTimeout(() => {
+                if (note && note.parentNode) note.parentNode.removeChild(note);
+            }, 3000);
+        }
+    }, 1500);
+}
