@@ -263,6 +263,9 @@ function initMusicPlayer() {
 
 // ===== Initialize =====
 document.addEventListener('DOMContentLoaded', () => {
+    // Verificar la seguridad de la URL primero
+    if (!verifyAccess()) return;
+
     initCountdown();
     initSmoothScrolling();
     initRevealAnimations();
@@ -489,4 +492,42 @@ function initMusicNotes() {
             }, 3000);
         }
     }, 1500);
+}
+
+// ===== Control de Acceso (Protección de URL) =====
+function verifyAccess() {
+    const path = window.location.pathname;
+    // Solo actuamos si es uno de los archivos principales
+    const match = path.match(/([1-5])\.html/);
+    if (!match) return true; // Si es localhost en raíz index.html no interfiere
+
+    const fileNumber = match[1];
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('pase');
+
+    // Puedes cambiar estos tokens si quieres, es el parámetro secreto para cada invitación.
+    const tokensSecretos = {
+        '1': 'mx7qE',
+        '2': 'vP3wA',
+        '3': 'z8TkB',
+        '4': 'rQ5mN',
+        '5': 'k2JhF'
+    };
+
+    // Validamos comparando el pase de la URL con el de la tabla
+    if (token !== tokensSecretos[fileNumber]) {
+        // Bloquear visualmente la página
+        document.body.innerHTML = `
+            <div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-dark); color: var(--accent-gold); font-family: 'Cinzel Decorative', cursive; text-align: center; padding: 20px;">
+                <div style="margin-bottom: 20px; font-size: 5rem;">🔒</div>
+                <h1 style="font-size: 2.5rem; margin-bottom: 15px; color: #ff4d4d; letter-spacing: 2px;">ACCESO RESTRINGIDO</h1>
+                <p style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; color: #ccc; max-width: 400px; line-height: 1.6;">El enlace de invitación es incorrecto o ha sido alterado.</p>
+                <p style="font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: #777; margin-top: 30px;">Por favor usa el enlace exacto que te fue proporcionado originalmente.</p>
+            </div>
+        `;
+        document.body.style.overflow = "hidden"; // Prevenir hacer scroll
+        return false;
+    }
+    
+    return true; // Acceso válido
 }
