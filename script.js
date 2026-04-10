@@ -497,9 +497,9 @@ function initMusicNotes() {
 // ===== Control de Acceso (Protección de URL) =====
 function verifyAccess() {
     const path = window.location.pathname;
-    // Solo actuamos si es uno de los archivos principales
-    const match = path.match(/([1-5])\.html/);
-    if (!match) return true; // Si es localhost en raíz index.html no interfiere
+    // Soporta tanto /2.html como /2 (Vercel clean URLs)
+    const match = path.match(/\/([1-5])(?:\.html|\/)?$/);
+    if (!match) return true; // Si no es 1,2,3,4,5, dejamos pasar (index)
 
     const fileNumber = match[1];
     const urlParams = new URLSearchParams(window.location.search);
