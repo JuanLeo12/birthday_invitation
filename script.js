@@ -572,13 +572,15 @@ function initAutoScrollPeek() {
             if (!userHasScrolled && window.scrollY <= 10 && !isPeeking) {
                 peekAction();
             }
-        }, 750);
+        }, 1250); // Le damos 1250ms para que se asimile la animación de 1100ms
     }
 
     function peekAction() {
         isPeeking = true;
-        const distance = 350; // Aumentado drásticamente a 350px para que se note mucho más en móviles
-        const duration = 700; // Un poco más de tiempo para cubrir mayor distancia suavemente
+        
+        // Calculamos una gran distancia para que sea indiscutible: 50% de la pantalla
+        const distance = window.innerHeight * 0.55; 
+        const duration = 1100; // Más de un segundo de duración para que el ojo asimile el movimiento ida y vuelta
         const startTime = performance.now();
         const startY = window.scrollY;
 
@@ -607,7 +609,8 @@ function initAutoScrollPeek() {
                 requestAnimationFrame(step);
             } else {
                 window.scrollTo(0, 0); // Asegurarnos 100% de que vuelve al tope exacto
-                isPeeking = false;
+                // Retrasamos apagar "isPeeking" para evitar que un evento scroll tardío mate el loop
+                setTimeout(() => { isPeeking = false; }, 100);
             }
         }
         
