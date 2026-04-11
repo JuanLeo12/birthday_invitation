@@ -561,7 +561,7 @@ function initAutoScrollPeek() {
         if (!userHasScrolled && window.scrollY === 0) {
             startPeekLoop();
         }
-    }, 1200);
+    }, 100);
 
     function startPeekLoop() {
         peekAction();
@@ -571,13 +571,13 @@ function initAutoScrollPeek() {
             if (!userHasScrolled && window.scrollY === 0 && !isPeeking) {
                 peekAction();
             }
-        }, 1400);
+        }, 650);
     }
 
     function peekAction() {
         isPeeking = true;
         const distance = 160; // Sigue subiendo los 160px completos
-        const duration = 650; // Acelerado a 650ms en total (Sube y baja como un resorte ultrarrápido)
+        const duration = 600; // Acelerado a 650ms en total (Sube y baja como un resorte ultrarrápido)
         const startTime = performance.now();
         const startY = window.scrollY;
 
