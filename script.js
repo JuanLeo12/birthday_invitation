@@ -558,7 +558,7 @@ function initAutoScrollPeek() {
 
     // Comenzar el loop más rápido, casi de inmediato
     setTimeout(() => {
-        if (!userHasScrolled && window.scrollY === 0) {
+        if (!userHasScrolled && window.scrollY <= 10) {
             startPeekLoop();
         }
     }, 100);
@@ -566,18 +566,19 @@ function initAutoScrollPeek() {
     function startPeekLoop() {
         peekAction();
         
-        // Loop muy veloz: se repite cada 1.4 segundos para que llame la atención constante
+        // Loop muy veloz: se repite constantemente
         peekInterval = setInterval(() => {
-            if (!userHasScrolled && window.scrollY === 0 && !isPeeking) {
+            // Dar margen de 10px en móvil donde el scroll no siempre aterriza perfecto en 0
+            if (!userHasScrolled && window.scrollY <= 10 && !isPeeking) {
                 peekAction();
             }
-        }, 650);
+        }, 750);
     }
 
     function peekAction() {
         isPeeking = true;
-        const distance = 160; // Sigue subiendo los 160px completos
-        const duration = 600; // Acelerado a 650ms en total (Sube y baja como un resorte ultrarrápido)
+        const distance = 350; // Aumentado drásticamente a 350px para que se note mucho más en móviles
+        const duration = 700; // Un poco más de tiempo para cubrir mayor distancia suavemente
         const startTime = performance.now();
         const startY = window.scrollY;
 
@@ -605,6 +606,7 @@ function initAutoScrollPeek() {
             if (progress < 1) {
                 requestAnimationFrame(step);
             } else {
+                window.scrollTo(0, 0); // Asegurarnos 100% de que vuelve al tope exacto
                 isPeeking = false;
             }
         }
