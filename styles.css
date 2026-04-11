@@ -456,27 +456,51 @@ body {
 }
 
 /* Scroll Indicator */
-.scroll-indicator {
+.scroll-container {
     position: absolute;
-    bottom: 20px;
+    bottom: 25px;
     left: 50%;
     transform: translateX(-50%);
-    width: 30px;
-    height: 50px;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 5;
+    opacity: 0;
+    animation: fadeInSimple 0.8s ease-out 2.9s forwards;
+}
+
+.scroll-text {
+    color: var(--accent-gold);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: textPulse 2s infinite;
+}
+
+.scroll-indicator {
+    width: 26px;
+    height: 42px;
+    border: 2px solid rgba(212, 175, 55, 0.8);
+    border-radius: 15px;
     display: flex;
     justify-content: center;
-    padding-top: 10px;
-    z-index: 5;
+    padding-top: 6px;
+    background: rgba(23, 42, 60, 0.4);
 }
 
 .scroll-indicator span {
-    width: 6px;
-    height: 10px;
-    background: white;
-    border-radius: 3px;
+    width: 4px;
+    height: 8px;
+    background: var(--accent-gold);
+    border-radius: 2px;
     animation: scroll 2s infinite;
+}
+
+@keyframes textPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
 }
 
 @media (max-height: 820px) and (min-width: 900px) {
@@ -2341,6 +2365,36 @@ body {
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
 }
 
+.music-tooltip {
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(23, 42, 60, 0.9);
+    border: 1px solid rgba(212, 175, 55, 0.6);
+    color: var(--accent-gold);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    pointer-events: none;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    animation: gentleBounceLeft 2s infinite;
+    transition: opacity 0.4s ease, right 0.3s ease;
+}
+
+.music-toggle.playing .music-tooltip {
+    opacity: 0;
+    pointer-events: none;
+    animation: none;
+}
+
+@keyframes gentleBounceLeft {
+    0%, 100% { transform: translate(0, -50%); }
+    50% { transform: translate(-10px, -50%); }
+}
+
 .music-toggle svg {
     width: 24px;
     height: 24px;
@@ -2590,7 +2644,7 @@ body {
 .butterfly-3 { animation-delay: 2.45s; }
 .butterfly-4 { animation-delay: 2.6s; }
 
-.scroll-indicator {
+.scroll-container {
     opacity: 0;
     animation: fadeInSimple 0.8s ease-out 2.9s forwards;
 }
@@ -2665,6 +2719,7 @@ body {
     .hero-girl,
     .sparkle,
     .butterfly,
+    .scroll-container,
     .scroll-indicator,
     .floral-decoration {
         animation: none !important;
