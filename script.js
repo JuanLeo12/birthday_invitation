@@ -533,12 +533,59 @@ function verifyAccess() {
     return true; // Acceso válido
 }
 
-// ===== Auto-Scroll Hint (Peek) =====
+// ===== Auto-Scroll Hint (Peek Loop) =====
 function initAutoScrollPeek() {
-    // Si a los 3.5 segundos el usuario no ha bajado aún, la página se deslizará ligeramente
-    setTimeout(() => {
-        if (window.scrollY === 0) {
-            window.scrollBy({ top: 120, behavior: 'smooth' });
+    let peekInterval;
+    let isPeeking = false;
+    let userHasScrolled = false;
+
+    // Detectar cuando el usuario desliza por sí mismo para detener el efecto
+    window.addEventListener('scroll', () => {
+        // Solo cuenta como scroll manual si baja más allá del pequeño asomo
+        if (window.scrollY > 150) {
+            userHasScrolled = true;
+            clearInterval(peekInterval); // Desaparecer el loop por completo
+            
+            // También ocultamos el contenedor visual si aún existe
+            const scrollVisual = document.querySelector('.scroll-container');
+            if (scrollVisual) {
+                scrollVisual.style.opacity = '0';
+                scrollVisual.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => scrollVisual.remove(), 500);
+            }
         }
-    }, 3500); 
+    }, { passive: true });
+
+    // Comenzar el loop a los 3.5s si no hay interacción
+    setTimeout(() => {
+        if (!userHasScrolled && window.scrollY === 0) {
+            startPeekLoop();
+        }
+    }, 3500);
+
+    function startPeekLoop() {
+        // Hacemos el primer asomo inmediatamente
+        peekAction();
+        
+        // Y lo repetimos en loop cada 3.5 segundos
+        peekInterval = setInterval(() => {
+            if (!userHasScrolled && window.scrollY === 0 && !isPeeking) {
+                peekAction();
+            }
+        }, 3500);
+    }
+
+    function peekAction() {
+        isPeeking = true;
+        // 1. Desliza hacia abajo un poco
+        window.scrollBy({ top: 80, behavior: 'smooth' });
+        
+        // 2. Regresa a la posición original después de 1 segundo
+        setTimeout(() => {
+            if (!userHasScrolled) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            setTimeout(() => { isPeeking = false; }, 800);
+        }, 1000);
+    }
 }
