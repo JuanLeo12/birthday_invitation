@@ -576,10 +576,16 @@ function initAutoScrollPeek() {
 
     function peekAction() {
         isPeeking = true;
-        const distance = 70; // 70px es más sutil y rápido
-        const duration = 1000; // 1 segundo total (500ms bajar, 500ms subir)
+        const distance = 160; // Desliza mucho más hacia arriba (160px para que se note bastante)
+        const duration = 800; // Total 800ms (muy rápido y asertivo: 400ms al bajar, 400ms al subir)
         const startTime = performance.now();
         const startY = window.scrollY;
+
+        // Función de curva de velocidad (Cubic Ease In-Out)
+        // Acelera rápido y frena de golpe como el resorte nativo de los celulares
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
 
         function step(currentTime) {
             if (userHasScrolled) return;
@@ -587,10 +593,13 @@ function initAutoScrollPeek() {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
             
-            // Usamos Math.sin() para crear una onda matemática perfecta. 
-            // Inicia en 0, sube suave llega a 1 en el medio, y baja suave a 0 al final.
-            // Esto hace que el gesto de ir y venir sea extremadamente fluido y sedoso.
-            const currentY = startY + distance * Math.sin(progress * Math.PI);
+            // Calculamos en qué punto del viaje "ida y vuelta" estamos (0 -> 1 -> 0)
+            const phase = progress < 0.5 ? (progress * 2) : (2 - progress * 2);
+            
+            // Aplicamos la curva "natural" al movimiento
+            const easedProgress = easeInOutCubic(phase);
+            const currentY = startY + (distance * easedProgress);
+            
             window.scrollTo(0, currentY);
 
             if (progress < 1) {
@@ -600,7 +609,7 @@ function initAutoScrollPeek() {
             }
         }
         
-        // Arranca la animación fluida
+        // Arranca la animación fluida y realista
         requestAnimationFrame(step);
     }
 }
