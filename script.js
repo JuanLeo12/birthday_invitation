@@ -556,28 +556,28 @@ function initAutoScrollPeek() {
         }
     }, { passive: true });
 
-    // Comenzar el loop más rápido (a los 2 segundos)
+    // Comenzar el loop más rápido, casi de inmediato
     setTimeout(() => {
         if (!userHasScrolled && window.scrollY === 0) {
             startPeekLoop();
         }
-    }, 2000);
+    }, 1200);
 
     function startPeekLoop() {
         peekAction();
         
-        // Repetimos en un ritmo más dinámico (cada 2.8 segundos)
+        // Loop muy veloz: se repite cada 1.4 segundos para que llame la atención constante
         peekInterval = setInterval(() => {
             if (!userHasScrolled && window.scrollY === 0 && !isPeeking) {
                 peekAction();
             }
-        }, 2800);
+        }, 1400);
     }
 
     function peekAction() {
         isPeeking = true;
-        const distance = 160; // Desliza mucho más hacia arriba (160px para que se note bastante)
-        const duration = 800; // Total 800ms (muy rápido y asertivo: 400ms al bajar, 400ms al subir)
+        const distance = 160; // Sigue subiendo los 160px completos
+        const duration = 650; // Acelerado a 650ms en total (Sube y baja como un resorte ultrarrápido)
         const startTime = performance.now();
         const startY = window.scrollY;
 
