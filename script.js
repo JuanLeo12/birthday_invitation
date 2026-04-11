@@ -535,18 +535,15 @@ function verifyAccess() {
 
 // ===== Auto-Scroll Hint (Peek Loop) =====
 function initAutoScrollPeek() {
-    let peekInterval;
     let isPeeking = false;
     let userHasScrolled = false;
+    let peekTimeout;
 
-    // Detectar cuando el usuario desliza por sí mismo para detener el efecto
-    window.addEventListener('scroll', () => {
-        // Solo cuenta como scroll manual si baja más allá del pequeño asomo
-        if (window.scrollY > 120 && !userHasScrolled && !isPeeking) {
+    // Función robusta para apagar completamente la animación cuando el usuario desliza por sí mismo
+    const stopPeeking = () => {
+        if (!userHasScrolled) {
             userHasScrolled = true;
-            clearInterval(peekInterval); // Desaparecer el loop por completo
-            
-            // También ocultamos el contenedor visual si aún existe
+            clearTimeout(peekTimeout);
             const scrollVisual = document.querySelector('.scroll-container');
             if (scrollVisual) {
                 scrollVisual.style.opacity = '0';
@@ -554,38 +551,42 @@ function initAutoScrollPeek() {
                 setTimeout(() => scrollVisual.remove(), 500);
             }
         }
+    };
+
+    // Identificar gestos puramente humanos en cualquier plataforma
+    window.addEventListener('touchstart', stopPeeking, { passive: true });
+    window.addEventListener('wheel', stopPeeking, { passive: true });
+    window.addEventListener('keydown', (e) => {
+        if (['Space', 'ArrowDown', 'ArrowUp', 'PageDown', 'PageUp'].includes(e.code)) {
+            stopPeeking();
+        }
+    });
+
+    // Fallback: si detectamos que avanzó demasiado (fuera de la animación)
+    window.addEventListener('scroll', () => {
+        if (!isPeeking && window.scrollY > 20) {
+            stopPeeking();
+        }
     }, { passive: true });
 
-    // Comenzar el loop más rápido, casi de inmediato
-    setTimeout(() => {
+    // Comenzar el ciclo
+    peekTimeout = setTimeout(() => {
         if (!userHasScrolled && window.scrollY <= 10) {
-            startPeekLoop();
+            peekAction();
         }
     }, 100);
 
-    function startPeekLoop() {
-        peekAction();
-        
-        // Loop muy veloz: se repite constantemente
-        peekInterval = setInterval(() => {
-            // Dar margen de 10px en móvil donde el scroll no siempre aterriza perfecto en 0
-            if (!userHasScrolled && window.scrollY <= 10 && !isPeeking) {
-                peekAction();
-            }
-        }, 1250); // Le damos 1250ms para que se asimile la animación de 1100ms
-    }
-
     function peekAction() {
+        if (userHasScrolled) return;
         isPeeking = true;
         
-        // Calculamos una gran distancia para que sea indiscutible: 50% de la pantalla
-        const distance = window.innerHeight * 0.55; 
-        const duration = 1100; // Más de un segundo de duración para que el ojo asimile el movimiento ida y vuelta
+        // Exactamente la misma distancia universal (ni tan gigante que rompa el móvil ni tan enana que no se vea)
+        // Usamos un cap de píxeles: el 40% de la ventana o 350 píxeles, lo que sea menor.
+        const distance = Math.min(window.innerHeight * 0.4, 350); 
+        const duration = 1200; // 1.2 segundos ida y vuelta
         const startTime = performance.now();
-        const startY = window.scrollY;
 
-        // Función de curva de velocidad (Cubic Ease In-Out)
-        // Acelera rápido y frena de golpe como el resorte nativo de los celulares
+        // Curva tipo "bounce" firme
         function easeInOutCubic(t) {
             return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         }
@@ -594,27 +595,31 @@ function initAutoScrollPeek() {
             if (userHasScrolled) return;
             
             const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
+            let progress = elapsed / duration;
+            if (progress > 1) progress = 1;
             
             // Calculamos en qué punto del viaje "ida y vuelta" estamos (0 -> 1 -> 0)
             const phase = progress < 0.5 ? (progress * 2) : (2 - progress * 2);
             
-            // Aplicamos la curva "natural" al movimiento
-            const easedProgress = easeInOutCubic(phase);
-            const currentY = startY + (distance * easedProgress);
+            const currentY = distance * easeInOutCubic(phase);
             
             window.scrollTo(0, currentY);
 
             if (progress < 1) {
                 requestAnimationFrame(step);
             } else {
-                window.scrollTo(0, 0); // Asegurarnos 100% de que vuelve al tope exacto
-                // Retrasamos apagar "isPeeking" para evitar que un evento scroll tardío mate el loop
-                setTimeout(() => { isPeeking = false; }, 100);
+                window.scrollTo(0, 0); // Forzar arriba al terminar la animación
+                
+                // En vez de tener un intervalo paralelo peleando, armamos una cadena pura:
+                setTimeout(() => {
+                    isPeeking = false;
+                    if (!userHasScrolled) {
+                        peekTimeout = setTimeout(peekAction, 400); // Pequeña pausa antes de volver a bajar
+                    } // Esto genera el loop infinito SEGURO
+                }, 50);
             }
         }
         
-        // Arranca la animación fluida y realista
         requestAnimationFrame(step);
     }
 }
