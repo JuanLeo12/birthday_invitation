@@ -2390,6 +2390,29 @@ body {
     animation: none;
 }
 
+.music-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -8px;
+    transform: translateY(-50%);
+    border-width: 8px 0 8px 8px;
+    border-style: solid;
+    border-color: transparent transparent transparent rgba(23, 42, 60, 0.9);
+}
+
+.music-tooltip::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -10px;
+    transform: translateY(-50%);
+    border-width: 10px 0 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent transparent rgba(212, 175, 55, 0.6);
+    z-index: -1;
+}
+
 @keyframes gentleBounceLeft {
     0%, 100% { transform: translate(0, -50%); }
     50% { transform: translate(-10px, -50%); }

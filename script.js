@@ -274,6 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroPointerParallax();
     initButtonEffects();
     initMusicPlayer();
+    initAutoScrollPeek();
     
     // Magic Effects
     initFallingMagic();
@@ -530,4 +531,14 @@ function verifyAccess() {
     }
     
     return true; // Acceso válido
+}
+
+// ===== Auto-Scroll Hint (Peek) =====
+function initAutoScrollPeek() {
+    // Si a los 3.5 segundos el usuario no ha bajado aún, la página se deslizará ligeramente
+    setTimeout(() => {
+        if (window.scrollY === 0) {
+            window.scrollBy({ top: 120, behavior: 'smooth' });
+        }
+    }, 3500); 
 }
