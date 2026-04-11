@@ -542,7 +542,7 @@ function initAutoScrollPeek() {
     // Detectar cuando el usuario desliza por sí mismo para detener el efecto
     window.addEventListener('scroll', () => {
         // Solo cuenta como scroll manual si baja más allá del pequeño asomo
-        if (window.scrollY > 120 && !userHasScrolled) {
+        if (window.scrollY > 120 && !userHasScrolled && !isPeeking) {
             userHasScrolled = true;
             clearInterval(peekInterval); // Desaparecer el loop por completo
             
