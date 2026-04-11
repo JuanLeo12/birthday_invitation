@@ -542,7 +542,7 @@ function initAutoScrollPeek() {
     // Detectar cuando el usuario desliza por sí mismo para detener el efecto
     window.addEventListener('scroll', () => {
         // Solo cuenta como scroll manual si baja más allá del pequeño asomo
-        if (window.scrollY > 150) {
+        if (window.scrollY > 120 && !userHasScrolled) {
             userHasScrolled = true;
             clearInterval(peekInterval); // Desaparecer el loop por completo
             
@@ -556,36 +556,51 @@ function initAutoScrollPeek() {
         }
     }, { passive: true });
 
-    // Comenzar el loop a los 3.5s si no hay interacción
+    // Comenzar el loop más rápido (a los 2 segundos)
     setTimeout(() => {
         if (!userHasScrolled && window.scrollY === 0) {
             startPeekLoop();
         }
-    }, 3500);
+    }, 2000);
 
     function startPeekLoop() {
-        // Hacemos el primer asomo inmediatamente
         peekAction();
         
-        // Y lo repetimos en loop cada 3.5 segundos
+        // Repetimos en un ritmo más dinámico (cada 2.8 segundos)
         peekInterval = setInterval(() => {
             if (!userHasScrolled && window.scrollY === 0 && !isPeeking) {
                 peekAction();
             }
-        }, 3500);
+        }, 2800);
     }
 
     function peekAction() {
         isPeeking = true;
-        // 1. Desliza hacia abajo un poco
-        window.scrollBy({ top: 80, behavior: 'smooth' });
-        
-        // 2. Regresa a la posición original después de 1 segundo
-        setTimeout(() => {
-            if (!userHasScrolled) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+        const distance = 70; // 70px es más sutil y rápido
+        const duration = 1000; // 1 segundo total (500ms bajar, 500ms subir)
+        const startTime = performance.now();
+        const startY = window.scrollY;
+
+        function step(currentTime) {
+            if (userHasScrolled) return;
+            
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Usamos Math.sin() para crear una onda matemática perfecta. 
+            // Inicia en 0, sube suave llega a 1 en el medio, y baja suave a 0 al final.
+            // Esto hace que el gesto de ir y venir sea extremadamente fluido y sedoso.
+            const currentY = startY + distance * Math.sin(progress * Math.PI);
+            window.scrollTo(0, currentY);
+
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                isPeeking = false;
             }
-            setTimeout(() => { isPeeking = false; }, 800);
-        }, 1000);
+        }
+        
+        // Arranca la animación fluida
+        requestAnimationFrame(step);
     }
 }
