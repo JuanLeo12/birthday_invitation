@@ -588,11 +588,11 @@ function initAutoScrollPeek() {
         // porque pelea contra nuestro JS cuadro a cuadro e impide que baje rápido o avance lo suficiente.
         document.documentElement.style.scrollBehavior = 'auto';
         
-        // Exactamente el 60% de la altura de la PANTALLA ACTUAL.
+        // Exactamente el 40% de la altura de la PANTALLA ACTUAL.
         // Esto garantiza proporcionalidad absoluta: bajará exactamente "la misma distancia" relativa
-        // enseñando suficiente contenido sin ser exagerado.
-        const distance = window.innerHeight * 0.60; 
-        const duration = 1450; // 1.45 segundos para el viaje correspondiente a esta distancia
+        // enseñando un asomo sutil y elegante del contenido inferior.
+        const distance = window.innerHeight * 0.40; 
+        const duration = 1300; // 1.30 segundos para un viaje más corto
         const startTime = performance.now();
 
         function step(currentTime) {
