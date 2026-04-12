@@ -544,6 +544,7 @@ function initAutoScrollPeek() {
     const stopPeeking = () => {
         if (!userHasScrolled) {
             userHasScrolled = true;
+            document.documentElement.style.scrollBehavior = ''; // Restaurar siempre comportamiento original del CSS
             clearTimeout(peekTimeout);
             const scrollVisual = document.querySelector('.scroll-container');
             if (scrollVisual) {
@@ -583,6 +584,10 @@ function initAutoScrollPeek() {
         if (userHasScrolled) return;
         isPeeking = true;
         
+        // Desactivamos temporalmente el scroll nativo suave (CSS scroll-behavior: smooth) 
+        // porque pelea contra nuestro JS cuadro a cuadro e impide que baje rápido o avance lo suficiente.
+        document.documentElement.style.scrollBehavior = 'auto';
+        
         // Exactamente el 85% de la altura de la PANTALLA ACTUAL.
         // Esto garantiza proporcionalidad absoluta: bajará exactamente "la misma distancia" relativa
         // enseñando casi toda la sección inferior de un solo salto.
@@ -591,7 +596,10 @@ function initAutoScrollPeek() {
         const startTime = performance.now();
 
         function step(currentTime) {
-            if (userHasScrolled) return;
+            if (userHasScrolled) {
+                document.documentElement.style.scrollBehavior = '';
+                return;
+            }
             
             const elapsed = currentTime - startTime;
             let progress = elapsed / duration;
@@ -607,6 +615,7 @@ function initAutoScrollPeek() {
             if (progress < 1) {
                 requestAnimationFrame(step);
             } else {
+                document.documentElement.style.scrollBehavior = ''; // Restaurar transiciones de CSS
                 window.scrollTo(0, 0); // Forzar coordenada Y exactamente a 0
                 
                 // Registrar para anular eventos falsos (reducido a 400ms tras pruebas)
