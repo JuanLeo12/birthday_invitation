@@ -538,8 +538,9 @@ function initAutoScrollPeek() {
     let isPeeking = false;
     let userHasScrolled = false;
     let peekTimeout;
+    let lastPeekFinishTime = 0;
 
-    // Función robusta para apagar completamente la animación cuando el usuario desliza por sí mismo
+    // Función limpia y única para detener todo el bucle
     const stopPeeking = () => {
         if (!userHasScrolled) {
             userHasScrolled = true;
@@ -547,13 +548,13 @@ function initAutoScrollPeek() {
             const scrollVisual = document.querySelector('.scroll-container');
             if (scrollVisual) {
                 scrollVisual.style.opacity = '0';
-                scrollVisual.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => scrollVisual.remove(), 500);
+                scrollVisual.style.transition = 'opacity 0.6s ease';
+                setTimeout(() => scrollVisual.remove(), 600);
             }
         }
     };
 
-    // Identificar gestos puramente humanos en cualquier plataforma
+    // Detectar si el usuario toca la pantalla, gira la rueda del ratón o presiona teclas para bajar
     window.addEventListener('touchstart', stopPeeking, { passive: true });
     window.addEventListener('wheel', stopPeeking, { passive: true });
     window.addEventListener('keydown', (e) => {
@@ -562,31 +563,33 @@ function initAutoScrollPeek() {
         }
     });
 
-    // Fallback: si detectamos que avanzó demasiado (fuera de la animación)
+    // Detectar scroll manual genérico (ej. usar la barra espaciadora o la barra de desplazamiento en PC)
     window.addEventListener('scroll', () => {
-        if (!isPeeking && window.scrollY > 20) {
+        // Ignoramos el scroll si estamos animando, o si la animación acabó hace menos de 500 milisegundos 
+        // (ya que el navegador dispara un evento FALSO de scroll tras volver al punto 0 de golpe).
+        if (!isPeeking && !userHasScrolled && (Date.now() - lastPeekFinishTime > 500) && window.scrollY > 15) {
             stopPeeking();
         }
     }, { passive: true });
 
-    // Comenzar el ciclo
+    // Comenzar el ciclo inicial 
     peekTimeout = setTimeout(() => {
         if (!userHasScrolled && window.scrollY <= 10) {
             peekAction();
         }
-    }, 100);
+    }, 200);
 
     function peekAction() {
         if (userHasScrolled) return;
         isPeeking = true;
         
-        // Exactamente la misma distancia universal (ni tan gigante que rompa el móvil ni tan enana que no se vea)
-        // Usamos un cap de píxeles: el 40% de la ventana o 350 píxeles, lo que sea menor.
-        const distance = Math.min(window.innerHeight * 0.4, 350); 
-        const duration = 1200; // 1.2 segundos ida y vuelta
+        // Exactamente la misma distancia fija y generosa en píxeles tanto para PC como celular 
+        // 400px bajará de forma drástica y visual en todos los dispositivos por igual.
+        const distance = 400; 
+        const duration = 1300; // 1.3 segundos ida y vuelta
         const startTime = performance.now();
 
-        // Curva tipo "bounce" firme
+        // Curva tipo "resorte/bounce" súper limpia
         function easeInOutCubic(t) {
             return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         }
@@ -598,9 +601,8 @@ function initAutoScrollPeek() {
             let progress = elapsed / duration;
             if (progress > 1) progress = 1;
             
-            // Calculamos en qué punto del viaje "ida y vuelta" estamos (0 -> 1 -> 0)
+            // Convertimos la fase lineal 0->1 en un rebote suave (0->1->0)
             const phase = progress < 0.5 ? (progress * 2) : (2 - progress * 2);
-            
             const currentY = distance * easeInOutCubic(phase);
             
             window.scrollTo(0, currentY);
@@ -608,15 +610,16 @@ function initAutoScrollPeek() {
             if (progress < 1) {
                 requestAnimationFrame(step);
             } else {
-                window.scrollTo(0, 0); // Forzar arriba al terminar la animación
+                window.scrollTo(0, 0); // Forzar arriba al terminar la animación de golpe en el frame final
                 
-                // En vez de tener un intervalo paralelo peleando, armamos una cadena pura:
-                setTimeout(() => {
-                    isPeeking = false;
-                    if (!userHasScrolled) {
-                        peekTimeout = setTimeout(peekAction, 400); // Pequeña pausa antes de volver a bajar
-                    } // Esto genera el loop infinito SEGURO
-                }, 50);
+                // Registrar cuándo acabó la animación para evadir "scrolls" nativos falsos (bug de PC)
+                lastPeekFinishTime = Date.now();
+                isPeeking = false;
+
+                // Programar el siguiente bucle limpiamente
+                if (!userHasScrolled) {
+                    peekTimeout = setTimeout(peekAction, 600); // 600 milisegundos de respiro arriba antes de volver a bajar
+                }
             }
         }
         
