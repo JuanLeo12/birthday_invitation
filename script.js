@@ -583,16 +583,12 @@ function initAutoScrollPeek() {
         if (userHasScrolled) return;
         isPeeking = true;
         
-        // Exactamente la misma distancia fija y generosa en píxeles tanto para PC como celular 
-        // 400px bajará de forma drástica y visual en todos los dispositivos por igual.
-        const distance = 400; 
-        const duration = 1300; // 1.3 segundos ida y vuelta
+        // Exactamente el 35% de la altura de la PANTALLA ACTUAL.
+        // Esto garantiza proporcionalidad absoluta: bajará exactamente "la misma distancia" relativa
+        // tanto en una PC gigante como en un celular enano (mostrando 1/3 del contenido siguiente).
+        const distance = window.innerHeight * 0.35; 
+        const duration = 1400; // 1.4 segundos para un viaje suave y notable
         const startTime = performance.now();
-
-        // Curva tipo "resorte/bounce" súper limpia
-        function easeInOutCubic(t) {
-            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-        }
 
         function step(currentTime) {
             if (userHasScrolled) return;
@@ -601,24 +597,24 @@ function initAutoScrollPeek() {
             let progress = elapsed / duration;
             if (progress > 1) progress = 1;
             
-            // Convertimos la fase lineal 0->1 en un rebote suave (0->1->0)
-            const phase = progress < 0.5 ? (progress * 2) : (2 - progress * 2);
-            const currentY = distance * easeInOutCubic(phase);
+            // Reemplazamos la compleja curva doble por una sencilla "onda de seno" matemática.
+            // Math.sin va de 0 a 1 y luego vuelve a 0 formando un resorte suave ininterrumpido.
+            const phase = Math.sin(progress * Math.PI);
+            const currentY = distance * phase;
             
             window.scrollTo(0, currentY);
 
             if (progress < 1) {
                 requestAnimationFrame(step);
             } else {
-                window.scrollTo(0, 0); // Forzar arriba al terminar la animación de golpe en el frame final
+                window.scrollTo(0, 0); // Forzar coordenada Y exactamente a 0
                 
-                // Registrar cuándo acabó la animación para evadir "scrolls" nativos falsos (bug de PC)
+                // Registrar para anular eventos falsos (reducido a 400ms tras pruebas)
                 lastPeekFinishTime = Date.now();
                 isPeeking = false;
 
-                // Programar el siguiente bucle limpiamente
                 if (!userHasScrolled) {
-                    peekTimeout = setTimeout(peekAction, 600); // 600 milisegundos de respiro arriba antes de volver a bajar
+                    peekTimeout = setTimeout(peekAction, 500); // Medio segundo para procesar y arrancar de nuevo
                 }
             }
         }
