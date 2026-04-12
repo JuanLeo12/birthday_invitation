@@ -583,11 +583,11 @@ function initAutoScrollPeek() {
         if (userHasScrolled) return;
         isPeeking = true;
         
-        // Exactamente el 55% de la altura de la PANTALLA ACTUAL.
+        // Exactamente el 85% de la altura de la PANTALLA ACTUAL.
         // Esto garantiza proporcionalidad absoluta: bajará exactamente "la misma distancia" relativa
-        // tanto en una PC gigante como en un celular enano (mostrando más de la mitad del contenido siguiente).
-        const distance = window.innerHeight * 0.55; 
-        const duration = 1400; // 1.4 segundos para un viaje suave y notable
+        // enseñando casi toda la sección inferior de un solo salto.
+        const distance = window.innerHeight * 0.85; 
+        const duration = 1600; // 1.6 segundos para cubrir más distancia de forma natural
         const startTime = performance.now();
 
         function step(currentTime) {
